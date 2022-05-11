@@ -22,10 +22,10 @@ const constructURL = (camera, rover, date) => {
 
 const App = () => {
 
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState('');
   const [camera, setCamera] = useState('');
   const [rover, setRover] = useState('');
-  const [date, setDate] = useState([]);
+  const [date, setDate] = useState('');
 
   const gettingInfo = () => {
     fetch(constructURL(camera, rover, date))
@@ -39,10 +39,11 @@ const App = () => {
       <header className="App-header">
         <div id='container'>
           <div>
-            <input type="text" id="date-picker" name="date-picker" placeholder="Enter a date" onChange={getDate}></input>
-            <input type="text" id="rover" name="rover" placeholder="Enter a rover" onChange={getRover}></input>
-            <input type="text" id="camera" name="camera" placeholder="Enter a camera" onChange={getCamera}></input>
+            <input type="text" id="date-picker" name="date-picker" placeholder="Enter a date" onChange={(d) => setDate(d.target.value)}></input>
+            <input type="text" id="rover" name="rover" placeholder="Enter a rover" onChange={(r) => setRover(r.target.value)}></input>
+            <input type="text" id="camera" name="camera" placeholder="Enter a camera" onChange={(c) => setCamera(c.target.value)}></input>
           </div>
+          <button onClick={gettingInfo}> Search </button>
         </div>
       </header>
 
