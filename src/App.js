@@ -47,7 +47,8 @@ const App = () => {
     .catch(() => console.log("Fetch Failed")) 
 
   }; 
-
+  
+  console.log("Changing file location"); 
   return (
     <div className="App">
       <header className="App-header">
