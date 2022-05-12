@@ -4,19 +4,16 @@ import React, { useEffect, useState } from 'react';
 
 const App = () => {
 
-  const [photos, setPhotos] = useState('');
+  const [photos, setPhotos] = useState([]);
   const [camera, setCamera] = useState('');
   const [rover, setRover] = useState('');
   const [date, setDate] = useState('');
   const [url, setURL] = useState('');
 
-  useEffect(() => {const url = constructURL(camera, rover, date);
-  setURL(url)},[date, camera, rover])
-  
-
+  //let images = <h3>search results will go here</h3>
   const constructURL = (camera, rover, date) => {
     const userURL = "https://api.nasa.gov/mars-photos/api/v1/rovers/" + rover + "/photos?earth_date=" + date + "&camera=" + camera + "&api_key=DEMO_KEY";
-    sconsole.log(userURL)
+    return userURL
     // Adjust the URL to make sure if the user hasn't inputted a camera, rover or date;
   
   }
@@ -40,15 +37,17 @@ const App = () => {
   }
   const gettingInfo = () => {
     fetch(url)
-    .then((response) => {setPhotos(response.json()['photos'])
-    console.log(photos)
-    console.log(url)
-  }) //sets values for photos 
+    .then((response) => {return response.json()
+  }).then((result) => {setPhotos(result['photos'])})
     .catch(() => console.log("Fetch Failed")) 
-
   }; 
   
-  console.log("Changing file location"); 
+  useEffect(() => {
+    const newUrl = constructURL(camera, rover, date)
+    setURL(newUrl)
+  },[date, camera, rover])
+
+
   return (
     <div className="App">
       <header className="App-header">
@@ -59,6 +58,7 @@ const App = () => {
             <input type="text" id="camera" name="camera" placeholder="Enter a camera" onChange={getCamera}></input>
           </div>
           <button onClick={gettingInfo}> Search </button>
+          {photos? <div> {photos.map((item, index ) => {return <img key={index} src={item['img_src']}/>})} </div>: null}
         </div>
       </header>
       <body>
