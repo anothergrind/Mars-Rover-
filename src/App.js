@@ -7,123 +7,119 @@ const App = () => {
   const [rover, setRover] = useState('');
   const [date, setDate] = useState('');
   const [url, setURL] = useState('');
-
- /* 
-  let images = <h3>search results will go here</h3>
-
-  I changed it from const to let because let allows you to adjust the value after setting it initially.
+  
+  // All of the errors, using states. No errors to begin with, so I set them to a falsy value
+  const [errRover, setErrRover] = useState(null);
+  const [errCamera, setErrCamera] = useState(null);
+  const [errDate, setErrDate] = useState(null);
 
   
-  For the error handling, I used try and catch, because that was one of the options that I found on the 
-  documentation and it was still viable. For the catch blocks I called an alert function and passed the 
-  error in it, but this would result in the user getting an error message before they even had the chance to 
-  input anything. To solve the problem that I was running into, I just changed all the alert() to console.log() 
-*/
+  let timer; // Timer for debouncing 
+  clearTimeout(timer);
+
+  // let images = <h3>search results will go here</h3>
+
   let constructURL = (camera, rover, date) => {
     let userURL = "https://api.nasa.gov/mars-photos/api/v1/rovers/" + rover + "/photos?earth_date=" + date + "&camera=" + camera + "&api_key=DEMO_KEY";
     
-    if(camera === ''){
+    if(!camera){
       userURL = "https://api.nasa.gov/mars-photos/api/v1/rovers/" + rover + "/photos?earth_date" + date + "&api_key=DEMO_KEY";
     }
-    else if(rover === ''){
+    else if(!rover){
       userURL = "https://api.nasa.gov/mars-photos/api/v1/photos?earth_date=" + date + "&camera=" + camera + "&api_key=DEMO_KEY";
     }
-    else if(date === ''){
+    else if(!date){
       userURL = "https://api.nasa.gov/mars-photos/api/v1/rovers/" + rover + "/photos?&camera=" + camera + "&api_key=DEMO_KEY";
     }
-    else if(camera === '' && rover === ''){
+    else if(!camera && !rover){
       userURL = "https://api.nasa.gov/mars-photos/api/v1/photos?earth_date=" + date + "&api_key=DEMO_KEY";
     }
-    else if(camera === '' && date === ''){
+    else if(!camera && !date){
       userURL = "https://api.nasa.gov/mars-photos/api/v1/rovers/" + rover + "/photos?" + "&api_key=DEMO_KEY";
     }
-    else if(rover === '' && date === ''){
+    else if(!rover && !date){
       userURL = "https://api.nasa.gov/mars-photos/api/v1/camera=" + camera + "&api_key=DEMO_KEY";
     }
     else{
-      console.log(userURL);
+      userURL = '';
     }
 
-    try{
-      if(camera === ''){
-        throw Error('Please input a camera');
-      }
-      else if(rover === ''){
-        throw Error('Please input a rover');
-      }
-      else if(date === ''){
-        throw Error('Please input a date in the YYYY-MM-DD format');
-      }
-    }catch(err){
-      console.log(err.message);
-    }
-    return userURL
-
+    return userURL; 
   }
   
   const getDate = (d) => {
     const inputedDate = d.target.value;
-    setDate(d.target.value);
-    console.log(date); 
-    // Format is YYYY-MM-DD 
+    const parsedDate = Date.parse(d.target.value);
+    clearTimeout(timer);
+    
+    timer = setTimeout(() => {
+      setDate(d.target.value); 
+    },500)
+
+    // Checking to make sure the date isn't a falsy value 
     try{
-      for(let i = 0; i < inputedDate.length; i++){
-        if(i === 5){
-          if(inputedDate[i] < 3){
-            break; 
-          }
-          else{
-            throw Error("Please format the date in a YYYY-MM-DD standard");
-          }
-        }
+      if(!inputedDate){
+        throw Error('Please arrange the date into a YYYY-MM-DD format');
+      }
+      if(!parsedDate){
+        throw Error('Please arrange the date into a YYYY-MM-DD format');
       }
     }catch(err){
-      console.log(err.message);
+      setErrDate(err.message);
     }
+
   }
 
   const getRover = (r) => {
     const inputedRover = r.target.value;
-    setRover(r.target.value);
-    console.log(inputedRover);
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      setRover(r.target.value); 
+    },500)
+    
     try{
       if(inputedRover === 'Curiosity' || inputedRover === 'Opportunity' || inputedRover === 'Spirit'){
-        console.log(setRover);
+        console.log(inputedRover);
       }
       else{
-        throw Error("This rover doesn't exist"); 
+        throw Error("Rover does not exist"); 
       }
     }catch(err){
-      console.log(err.message);
+      setErrRover(err.message);
     }
   }
 
   const getCamera = (c) => {
     const inputedCamera = c.target.value;
-    setCamera(c.target.value);
-    console.log(inputedCamera);
+    clearTimeout(timer);
+    
+    timer = setTimeout(() => {
+      setCamera(c.target.value); 
+    },500)
+
     try{
-      if(inputedCamera === 'FHAZ' || inputedCamera === 'RHAZ')
+      if(inputedCamera === "FHAZ" || inputedCamera === "RHAZ")
       {
         console.log(inputedCamera); // Gives "Jump target cannot cross function boundary" error
-        if(setRover === 'Curiosity')
+        if(setRover === "Curiosity")
         {
-          if(inputedCamera === 'MAST' || inputedCamera === 'CHEMCAM' || inputedCamera === 'MAHLI' || inputedCamera === 'MARDI' || inputedCamera === 'NAVCAM')
+          if(inputedCamera === "MAST" || inputedCamera === "CHEMCAM" || inputedCamera === "MAHLI" || inputedCamera === "MARDI"|| inputedCamera === "NAVICAM")
           {
             console.log(inputedCamera);
           }
         }
-        else if(setRover === 'Opportunity' || setRover === 'Spirit') {
-          if(inputedCamera === 'NAVCAM' || inputedCamera === 'PANCAM' || inputedCamera === 'MINITES'){
+        else if(setRover === "Opportunity" || setRover === "Spirit") {
+          if(inputedCamera === "NAVCAM" || inputedCamera === "PANCAM" || inputedCamera === "MINITES"){
             console.log(inputedCamera); 
           }
         }
       }
       else{
-        throw Error("The camera you inputted is either wrong or doesn't exist with the rover that you inputted")
+        throw Error(" Camera does not exist");
       }
     } catch(err){
-      console.log(err.message);
+      setErrCamera(err.message);
     }
   }
   const gettingInfo = () => {
@@ -138,17 +134,23 @@ const App = () => {
     setURL(newUrl)
   },[date, camera, rover])
 
-
   return (
     <div className="App">
       <header className="App-header">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"></link>
         <div id='container'>
           <div>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"></link>
             <input type="text" id="camera" name="camera" placeholder="Enter a camera" onChange={getCamera}></input>  
             <input type="text" id="rover" name="rover" placeholder="Enter a rover" onChange={getRover}></input>
             <input type="text" id="date-picker" name="date-picker" placeholder="Enter a date" onChange={getDate}></input>
+            
+            <button id="search-button" type="button" class="btn btn-primary" onClick={gettingInfo}> Search </button>
+            { errCamera && <div> { errCamera } </div> }
+            { errRover && <div> { errRover } </div> }
+            { errDate && <div> { errDate } </div> }
+            
           </div>
-          <button onClick={gettingInfo}> Search </button>
           {photos? <div> {photos.map((item, index ) => {return <img key={index} src={item['img_src']}/>})} </div>: null}
         </div>
       </header>
