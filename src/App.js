@@ -40,9 +40,6 @@ const App = () => {
     else if(!rover && !date){
       userURL = "https://api.nasa.gov/mars-photos/api/v1/camera=" + camera + "&api_key=DEMO_KEY";
     }
-    else{
-      userURL = '';
-    }
 
     return userURL; 
   }
@@ -54,7 +51,8 @@ const App = () => {
     
     timer = setTimeout(() => {
       setDate(d.target.value); 
-    },500)
+    },100)
+    setErrDate("")
 
     // Checking to make sure the date isn't a falsy value 
     try{
@@ -73,13 +71,15 @@ const App = () => {
   const getRover = (r) => {
     const inputedRover = r.target.value;
     clearTimeout(timer);
+    setErrRover("")
 
     timer = setTimeout(() => {
       setRover(r.target.value); 
     },500)
     
     try{
-      if(inputedRover === 'Curiosity' || inputedRover === 'Opportunity' || inputedRover === 'Spirit'){
+      const rover = inputedRover.toLowerCase()
+      if(rover === 'curiosity' || rover === 'opportunity' || rover === 'spirit'){
         console.log(inputedRover);
       }
       else{
