@@ -75,7 +75,7 @@ const App = () => {
 
     timer = setTimeout(() => {
       setRover(r.target.value); 
-    },500)
+    },100)
     
     try{
       const rover = inputedRover.toLowerCase()
@@ -93,25 +93,27 @@ const App = () => {
   const getCamera = (c) => {
     const inputedCamera = c.target.value;
     clearTimeout(timer);
-    
+    setErrCamera("")
+
     timer = setTimeout(() => {
       setCamera(c.target.value); 
-    },500)
+    },100)
 
     try{
-      if(inputedCamera === "FHAZ" || inputedCamera === "RHAZ")
+      const camera = inputedCamera.toUpperCase()
+      if(camera === "FHAZ" || camera === "RHAZ")
       {
-        console.log(inputedCamera); // Gives "Jump target cannot cross function boundary" error
-        if(setRover === "Curiosity")
+        console.log(camera); // Gives "Jump target cannot cross function boundary" error
+        if(rover === "curiosity")
         {
-          if(inputedCamera === "MAST" || inputedCamera === "CHEMCAM" || inputedCamera === "MAHLI" || inputedCamera === "MARDI"|| inputedCamera === "NAVICAM")
+          if(camera === "MAST" || camera === "CHEMCAM" || camera === "MAHLI" || camera === "MARDI"|| camera === "NAVICAM")
           {
             console.log(inputedCamera);
           }
         }
-        else if(setRover === "Opportunity" || setRover === "Spirit") {
-          if(inputedCamera === "NAVCAM" || inputedCamera === "PANCAM" || inputedCamera === "MINITES"){
-            console.log(inputedCamera); 
+        else if(rover === "opportunity" || rover === "spirit") {
+          if(camera === "NAVCAM" || camera === "PANCAM" || camera === "MINITES"){
+            console.log(camera); 
           }
         }
       }
