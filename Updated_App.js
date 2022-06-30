@@ -1,4 +1,4 @@
-mport './App.css';
+import './App.css';
 import React, { useState } from 'react';
 
 const constructURL = (camera, rover, date) => {
